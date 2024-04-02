@@ -12,8 +12,8 @@ namespace FlutterAPI.Data
     public class FlutterAPIContext : IdentityDbContext<User>
     {
         const string ADMIN_USER_GUID = "Admin";
-        const string ADMIN_ROLE_GUID = "ADMIN-ROLE";
-        const string STUDENT_ROLE_GUID = "STUDENT-ROLE";
+        const string ADMIN_ROLE_GUID = "Admin";
+        const string STUDENT_ROLE_GUID = "Student";
         private User user;
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,26 +46,34 @@ namespace FlutterAPI.Data
                 Id = ADMIN_USER_GUID,
                 UserName = "admin",
                 Email = "admin@gmail.com",
-                PasswordHash = hasher.HashPassword(user, "123456"),
+                PasswordHash = "baotran@910",
                 NormalizedEmail = "admin@gmail.com".ToUpper(),
                 NormalizedUserName = "admin@gmail.com".ToUpper(),
                 EmailConfirmed = true,
                 FullName = "Admin",
                 PhoneNumber = "",
-                DateCreated = DateTime.Now
+                Active = true,
+                Gender = "Nữ",
+                BirthDay = DateTime.Now,
+                DateCreated = DateTime.Now,
             },
             new User
             {
                 Id = "20DH111558",
                 UserName = "20DH111558",
                 Email = "student@gmail.com",
-                PasswordHash = hasher.HashPassword(user, "123456"),
+                PasswordHash = "123456",
                 NormalizedEmail = "student@gmail.com".ToUpper(),
                 NormalizedUserName = "student@gmail.com".ToUpper(),
                 EmailConfirmed = true,
                 FullName = "Trần Viễn Đại",
                 PhoneNumber = "0582072743",
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                Gender = "Nam",
+                BirthDay = DateTime.Now,
+                Active = true,
+                SchoolKey = "",
+                ImageURL = "https://scontent.fsgn6-1.fna.fbcdn.net/v/t1.6435-9/118910515_121133139718352_4296691441835191434_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=gATiW_XjmGcAX_N8wGa&_nc_ht=scontent.fsgn6-1.fna&oh=00_AfAGkhL-KyyMkOWqQ_GJIbIfgwtPON7S3QUoyD_8LDvjRw&oe=66337DE7"
             });;
 
             });
@@ -110,6 +118,7 @@ namespace FlutterAPI.Data
         public DbSet<User> User { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Product> Product { get; set; }
-
+        public DbSet<Bill> Bill { get; set; }
+        public DbSet<Order> Order { get; set; }
     }
 }

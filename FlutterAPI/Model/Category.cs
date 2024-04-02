@@ -6,11 +6,8 @@ namespace FlutterAPI.Model
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public string? Desc { get; set; }
+        public string? ImageURL { get; set; }
+        public string? Description { get; set; }
         public List<Product>? Products { get; set; }
-
-        [ForeignKey("UserID")]
-        public User? User { get; set; }
-        public string? UserID { get; set; }
     }
 }

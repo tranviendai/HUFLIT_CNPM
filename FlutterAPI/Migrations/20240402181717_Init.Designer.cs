@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlutterAPI.Migrations
 {
     [DbContext(typeof(FlutterAPIContext))]
-    [Migration("20240331071322_InitData")]
-    partial class InitData
+    [Migration("20240402181717_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,27 @@ namespace FlutterAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FlutterAPI.Model.Bill", b =>
+                {
+                    b.Property<string>("BillID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NumberID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
+
+                    b.HasKey("BillID");
+
+                    b.HasIndex("NumberID");
+
+                    b.ToTable("Bill");
+                });
+
             modelBuilder.Entity("FlutterAPI.Model.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -33,20 +54,45 @@ namespace FlutterAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Desc")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserID")
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("FlutterAPI.Model.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BillID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductID")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("BillID");
 
-                    b.ToTable("Category");
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("FlutterAPI.Model.Product", b =>
@@ -63,7 +109,7 @@ namespace FlutterAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -87,6 +133,12 @@ namespace FlutterAPI.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("BirthDay")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -104,6 +156,12 @@ namespace FlutterAPI.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -118,14 +176,23 @@ namespace FlutterAPI.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("NumberID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("SchoolKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchoolYear")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -147,6 +214,10 @@ namespace FlutterAPI.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique()
+                        .HasFilter("[PhoneNumber] IS NOT NULL");
+
                     b.ToTable("User", (string)null);
 
                     b.HasData(
@@ -154,18 +225,21 @@ namespace FlutterAPI.Migrations
                         {
                             Id = "Admin",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "add1bbee-c4e9-427c-8b28-625798cf6f01",
-                            DateCreated = new DateTime(2024, 3, 31, 14, 13, 21, 755, DateTimeKind.Local).AddTicks(1319),
+                            Active = true,
+                            BirthDay = new DateTime(2024, 4, 3, 1, 17, 14, 262, DateTimeKind.Local).AddTicks(5916),
+                            ConcurrencyStamp = "211396cf-02d9-484a-99a3-3424a3ba46d6",
+                            DateCreated = new DateTime(2024, 4, 3, 1, 17, 14, 262, DateTimeKind.Local).AddTicks(5936),
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
+                            Gender = "Nữ",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFgmkq/0wC0wHV5VZA4xGci9EqZHj1ZVQ7eRzSvOVQQHbA7cm4nmGCEtPyLYHoM/Zg==",
+                            PasswordHash = "baotran@910",
                             PhoneNumber = "",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "73cc86d1-23ae-4df2-aefe-5a9e406356c3",
+                            SecurityStamp = "0d058441-4f66-49fc-9165-407f65d1567b",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -173,18 +247,23 @@ namespace FlutterAPI.Migrations
                         {
                             Id = "20DH111558",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a47ca962-4db9-4b65-8037-a3cb70373d75",
-                            DateCreated = new DateTime(2024, 3, 31, 14, 13, 21, 876, DateTimeKind.Local).AddTicks(9799),
+                            Active = true,
+                            BirthDay = new DateTime(2024, 4, 3, 1, 17, 14, 262, DateTimeKind.Local).AddTicks(5962),
+                            ConcurrencyStamp = "a152686c-9089-44e2-9d7e-a345def122cc",
+                            DateCreated = new DateTime(2024, 4, 3, 1, 17, 14, 262, DateTimeKind.Local).AddTicks(5960),
                             Email = "student@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Trần Viễn Đại",
+                            Gender = "Nam",
+                            ImageURL = "https://scontent.fsgn6-1.fna.fbcdn.net/v/t1.6435-9/118910515_121133139718352_4296691441835191434_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=gATiW_XjmGcAX_N8wGa&_nc_ht=scontent.fsgn6-1.fna&oh=00_AfAGkhL-KyyMkOWqQ_GJIbIfgwtPON7S3QUoyD_8LDvjRw&oe=66337DE7",
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT@GMAIL.COM",
                             NormalizedUserName = "STUDENT@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOToOwYZUfzRFywxYYP2Kf+ePeboPH5sszEwIabps9W9OMwBm/cjVm2go9vgCtSszw==",
+                            PasswordHash = "123456",
                             PhoneNumber = "0582072743",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cea9b4f8-0350-4a7c-add5-80e2d4f635a3",
+                            SchoolKey = "",
+                            SecurityStamp = "d785e8ed-f206-41d0-811a-2870eae6488e",
                             TwoFactorEnabled = false,
                             UserName = "20DH111558"
                         });
@@ -219,13 +298,13 @@ namespace FlutterAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ADMIN-ROLE",
+                            Id = "Admin",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "STUDENT-ROLE",
+                            Id = "Student",
                             Name = "Student",
                             NormalizedName = "Student"
                         });
@@ -321,12 +400,12 @@ namespace FlutterAPI.Migrations
                         new
                         {
                             UserId = "Admin",
-                            RoleId = "ADMIN-ROLE"
+                            RoleId = "Admin"
                         },
                         new
                         {
                             UserId = "20DH111558",
-                            RoleId = "STUDENT-ROLE"
+                            RoleId = "Student"
                         });
                 });
 
@@ -349,13 +428,30 @@ namespace FlutterAPI.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FlutterAPI.Model.Category", b =>
+            modelBuilder.Entity("FlutterAPI.Model.Bill", b =>
                 {
                     b.HasOne("FlutterAPI.Model.User", "User")
-                        .WithMany("Categories")
-                        .HasForeignKey("UserID");
+                        .WithMany()
+                        .HasForeignKey("NumberID");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FlutterAPI.Model.Order", b =>
+                {
+                    b.HasOne("FlutterAPI.Model.Bill", "Bill")
+                        .WithMany("Orders")
+                        .HasForeignKey("BillID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FlutterAPI.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID");
+
+                    b.Navigation("Bill");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("FlutterAPI.Model.Product", b =>
@@ -418,14 +514,14 @@ namespace FlutterAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FlutterAPI.Model.Bill", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("FlutterAPI.Model.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("FlutterAPI.Model.User", b =>
-                {
-                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

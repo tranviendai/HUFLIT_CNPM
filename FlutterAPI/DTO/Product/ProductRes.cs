@@ -8,18 +8,37 @@ namespace FlutterAPI.DTO.Product
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public string? Image { get; set; }
+        public string? ImageURL { get; set; }
         public double Price { get; set; }
-        public CategoryRes? Category { get; set; }
+        public int? CategoryID { get; set; }
+        public string? CategoryName { get; set; }
 
         public ProductRes(FlutterAPI.Model.Product product)
         {
             Id = product.Id;
             Name = product.Name;
             Description = product.Description;
-            Image = product.Image;
+            ImageURL = product.ImageURL;
             Price = product.Price;
-            Category = new CategoryRes(product.Category!);
+            CategoryID = product.CategoryID;
+            CategoryName = product.Category?.Name;
+        }
+    }
+    public class ProductCategoryRes
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? ImageURL { get; set; }
+        public double Price { get; set; }
+
+        public ProductCategoryRes(FlutterAPI.Model.Product product)
+        {
+            Id = product.Id;
+            Name = product.Name;
+            Description = product.Description;
+            ImageURL = product.ImageURL;
+            Price = product.Price;
         }
     }
 }
