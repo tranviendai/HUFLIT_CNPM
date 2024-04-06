@@ -23,7 +23,7 @@ namespace FlutterAPI.Controllers
     public class StudentController : ControllerBase
     {
 
-        public FlutterAPIContext _context { get; set; }
+        private readonly FlutterAPIContext _context;
         private readonly UserService _user;
 
         public StudentController(FlutterAPIContext db, UserService user)
@@ -40,7 +40,6 @@ namespace FlutterAPI.Controllers
         [Route("Auth/login")]
         public async Task<IActionResult> Login([FromForm] LoginReq model)
         {
-            if (_context.User.FirstOrDefaultAsync(e => model.AccountID == e.Id).Result!.Active == false) return BadRequest("Tài khoản này chưa được kích hoạt");
             if (_context.User.FirstOrDefaultAsync(e => model.AccountID == e.Id).Result!.LockoutEnabled == true) return BadRequest("Tài khoản này đã bị khóa");
             var tokenInfo = await _user.Login(model);
             if (tokenInfo == null) return this.UnauthorizedRes("Sai tài khoản hoặc mật khẩu");
@@ -114,7 +113,6 @@ namespace FlutterAPI.Controllers
 
             return this.OkRes("Đổi mật khẩu thành công");
         }
-        [Authorize]
         [HttpPut("Auth/forgetPass")]
         public async Task<IActionResult> forgetPass([FromForm] string accountID, [FromForm] string numberID, [FromForm] string newPass)
         {
@@ -126,7 +124,7 @@ namespace FlutterAPI.Controllers
             await _context.SaveChangesAsync();
             return this.OkRes("Đổi mật khẩu thành công");
         }
-        [Authorize]
+     /*   [Authorize]*/
         [HttpGet("Category/getList")]
         public async Task<IActionResult> getListAll()
         {

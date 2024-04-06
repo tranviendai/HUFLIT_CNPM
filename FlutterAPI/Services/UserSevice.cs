@@ -32,7 +32,7 @@ namespace FlutterAPI.Services
         public async Task<LoginRes?> Login(LoginReq model)
         {
             // var user = await _userManager.FindByNameAsync(model.Username!);
-            var user = await db.User.Where(x => x.Id == model.AccountID && x.PasswordHash == model.Password && x.Active == true).FirstOrDefaultAsync();
+            var user = await db.User.Where(x => x.Id == model.AccountID && x.PasswordHash == model.Password).FirstOrDefaultAsync();
             if (user == null) return null;
             if (user != null)
             {
@@ -76,7 +76,7 @@ namespace FlutterAPI.Services
                     Gender = model.Gender!.Replace(" ", ""),
                     SchoolYear = model.SchoolYear,
                     SchoolKey = model.SchoolKey!.Replace(" ", ""),
-                    Active = false,
+                    Active = true
                 };
                 db.User.Add(user);
                 db.UserRoles.Add(new IdentityUserRole<string>()

@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddIdentityCore<User>().AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<FlutterAPIContext>().AddDefaultTokenProviders();
-builder.Services.AddSwaggerGen(sw => sw.SwaggerDoc("v1", new OpenApiInfo { Title = "dotnet8Authentication", Version = "1,0" }));
+builder.Services.AddSwaggerGen(sw => sw.SwaggerDoc("v1", new OpenApiInfo { Title = "FlutterAPI", Version = "1,0" }));
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -85,8 +85,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
             // If the request is for our hub...
             var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) &&
-                (path.StartsWithSegments("/chatHub")))
+            if (!string.IsNullOrEmpty(accessToken))
             {
                 // Read the token out of the query string
                 context.Token = accessToken;
@@ -135,11 +134,9 @@ app.UseCors("AllowAnyOrigin");
 app.UseSession();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

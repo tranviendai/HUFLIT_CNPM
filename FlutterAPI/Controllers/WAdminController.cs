@@ -1,6 +1,7 @@
 ﻿using FlutterAPI.Data;
 using FlutterAPI.DTO.Auth;
 using FlutterAPI.DTO.Category;
+using FlutterAPI.DTO.User;
 using FlutterAPI.Model;
 using FlutterAPI.Services;
 using Humanizer;
@@ -25,19 +26,25 @@ namespace FlutterAPI.Controllers
             _context = context;
             _user = userService;
         }
-        [HttpPost]
+   /*     [HttpPost]
         [Route("signUp")]
         public async Task<IActionResult> signUp([FromForm] SignUpReq model, [FromForm] [Required] string role = "Student")
         {
             var res = await _user.signup(model, role);
             return Ok(res);
-        }
+        }*/
 
         [HttpGet("listUser")]
         public async Task<IActionResult> listUser()
         {
             var user = await _user.getList();
             return this.OkRes(user);
+        }
+        [HttpGet("findByNumberID")]
+        public async Task<IActionResult> findByID(string accountID)
+        {
+            var db = await _context.User.FirstOrDefaultAsync(e => e.Id == accountID);
+            return Ok(new UserAdminRes(db!));
         }
 
         [HttpPut("changePassUser")]
@@ -50,8 +57,16 @@ namespace FlutterAPI.Controllers
             await _context.SaveChangesAsync();
             return this.OkRes("Đổi mật khẩu thành công");
         }
-
-        [HttpGet("locked")]
+        [HttpPut("activeUser")]
+        public async Task<IActionResult> activeUser(string accountID)
+        {
+            var user = await _user.findById(accountID);
+            user!.Active = true;
+            _context.User.Update(user!);
+            await _context.SaveChangesAsync();
+            return this.OkRes("Active tài khoản thành công");
+        }
+        [HttpPut("locked")]
         public async Task<IActionResult> locked(string accountID)
         {
             var user = await _user.findById(accountID);
@@ -68,6 +83,7 @@ namespace FlutterAPI.Controllers
             await _context.SaveChangesAsync();
             return this.OkRes("Xóa tài khoản thành công");
         }
+   
         [HttpPost("addCategory")]
         public async Task<IActionResult> addCategory([FromForm] CategoryReq request)
         {
