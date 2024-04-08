@@ -126,6 +126,19 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
 });
 
+builder.Services.AddHttpsRedirection(option =>
+{
+    option.HttpsPort = 443;
+});
+builder.Services.AddHsts(option =>
+{
+    option.Preload = true;
+    option.IncludeSubDomains = true;
+    option.MaxAge = TimeSpan.FromDays(60);
+    option.ExcludedHosts.Add("huflit.id.vn");
+    option.ExcludedHosts.Add("www.huflit.id.vn");
+});
+
 //service layer
 builder.Services.AddScoped<UserService>();
 
@@ -135,8 +148,19 @@ app.UseSession();
 
 // Configure the HTTP request pipeline.
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlutterAPI v1");
+        c.DisplayOperationId();
+        c.DisplayRequestDuration();
+    });
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

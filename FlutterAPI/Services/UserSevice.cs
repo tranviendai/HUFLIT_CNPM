@@ -93,11 +93,11 @@ namespace FlutterAPI.Services
             }
         }
 
-        public LoginRes GetLoginResult(string numberID, string id, string role)
+        public LoginRes GetLoginResult(string accountID, string id, string role)
         {
             var authClaims = new List<Claim>
             {
-                    new Claim(ClaimTypes.Name, numberID), //numberID
+                    new Claim(ClaimTypes.Name, accountID), //accountID
                     new Claim("ID", id), //numberID
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, role)
